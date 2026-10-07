@@ -18,3 +18,15 @@ Students can browse upcoming events and register as a participant or volunteer w
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=use-a-local-demo-password
 ```
+installation and executing
+```
+install all dependency using 
+$ pip install -r requirements.txt
+
+
+run the app
+python app.py
+
+then open the url 
+```
+https://127.0.0.1:5000
