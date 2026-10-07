@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Registrations · {{ event.name }} | Sports Registration{% endblock %}
+{% block content %}
+<section class="container admin-page">
+  <a class="back-link" href="{{ url_for('admin.dashboard') }}"><span aria-hidden="true">←</span> Admin dashboard</a>
+  <div class="admin-heading registration-heading">
+    <div>
+      <p class="eyebrow eyebrow-dark"><span class="eyebrow-rule"></span> {{ event.sport }} · {{ event.event_date.strftime('%d %b %Y') }}</p>
+      <h1>{{ event.name }}</h1>
+      <p>{{ event.venue }} · {{ event.status }}</p>
+    </div>
+    <a class="button button-outline" href="{{ url_for('events.detail', slug=event.slug) }}">Open event page <span aria-hidden="true">↗</span></a>
+  </div>
+
+  <section class="event-registration-stats" aria-label="Registration statistics for this event">
+    <div><span>Total entries</span><strong>{{ registration_stats.total }}</strong></div>
+    <div class="stat-pending"><span>Pending review</span><strong>{{ registration_stats.pending }}</strong></div>
+    <div class="stat-approved"><span>Approved</span><strong>{{ registration_stats.approved }}</strong></div>
+    <div class="stat-rejected"><span>Rejected</span><strong>{{ registration_stats.rejected }}</strong></div>
+  </section>
+
+  <section class="admin-panel registration-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow eyebrow-dark"><span class="eyebrow-rule"></span> {{ participants|length }} entries</p>
+        <h2>Participants</h2>
+        <p>Approve a place or reject an application. Pending entries count toward the event limit.</p>
+      </div>
+      <a class="button button-outline" href="{{ url_for('admin.export_registrations', event_id=event.id, registration_type='participant') }}">↓ Export participants CSV</a>
+    </div>
+    {% if participants %}
+      <div class="table-scroll">
+        <table class="data-table registrations-table">
+          <thead><tr><th scope="col">Student</th><th scope="col">Department / year</th><th scope="col">Contact</th><th scope="col">Status</th><th scope="col">Review</th></tr></thead>
+          <tbody>
+            {% for registration in participants %}
+              <tr>
+                <td data-label="Student"><strong>{{ registration.full_name }}</strong><small>{{ registration.student_id }} · {{ registration.registration_code }}</small></td>
+                <td data-label="Department / year">{{ registration.department }}<small>{{ registration.year }}</small></td>
+                <td data-label="Contact"><a href="mailto:{{ registration.email }}">{{ registration.email }}</a><small>{{ registration.phone }}</small></td>
+                <td data-label="Status"><span class="review-status review-{{ registration.status }}">{{ registration.status.title() }}</span></td>
+                <td data-label="Review">
+                  <div class="decision-actions">
+                    <form method="post" action="{{ url_for('admin.update_registration_status', registration_id=registration.id, new_status='approved') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="decision-button approve-button" type="submit" {% if registration.status == 'approved' %}disabled{% endif %}>Approve</button>
+                    </form>
+                    <form method="post" action="{{ url_for('admin.update_registration_status', registration_id=registration.id, new_status='rejected') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="decision-button reject-button" type="submit" {% if registration.status == 'rejected' %}disabled{% endif %}>Reject</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="table-empty">No participant registrations yet.</div>
+    {% endif %}
+  </section>
+
+  <section class="admin-panel registration-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow eyebrow-dark"><span class="eyebrow-rule"></span> {{ volunteers|length }} entries</p>
+        <h2>Volunteers</h2>
+        <p>Review the student details and preferred event-day role.</p>
+      </div>
+      <a class="button button-outline" href="{{ url_for('admin.export_registrations', event_id=event.id, registration_type='volunteer') }}">↓ Export volunteers CSV</a>
+    </div>
+    {% if volunteers %}
+      <div class="table-scroll">
+        <table class="data-table registrations-table">
+          <thead><tr><th scope="col">Student</th><th scope="col">Department / year</th><th scope="col">Contact</th><th scope="col">Preferred role</th><th scope="col">Status</th><th scope="col">Review</th></tr></thead>
+          <tbody>
+            {% for registration in volunteers %}
+              <tr>
+                <td data-label="Student"><strong>{{ registration.full_name }}</strong><small>{{ registration.student_id }} · {{ registration.registration_code }}</small></td>
+                <td data-label="Department / year">{{ registration.department }}<small>{{ registration.year }}</small></td>
+                <td data-label="Contact"><a href="mailto:{{ registration.email }}">{{ registration.email }}</a><small>{{ registration.phone }}</small></td>
+                <td data-label="Preferred role">{{ registration.volunteer_role }}</td>
+                <td data-label="Status"><span class="review-status review-{{ registration.status }}">{{ registration.status.title() }}</span></td>
+                <td data-label="Review">
+                  <div class="decision-actions">
+                    <form method="post" action="{{ url_for('admin.update_registration_status', registration_id=registration.id, new_status='approved') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="decision-button approve-button" type="submit" {% if registration.status == 'approved' %}disabled{% endif %}>Approve</button>
+                    </form>
+                    <form method="post" action="{{ url_for('admin.update_registration_status', registration_id=registration.id, new_status='rejected') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="decision-button reject-button" type="submit" {% if registration.status == 'rejected' %}disabled{% endif %}>Reject</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="table-empty">No volunteer registrations yet.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

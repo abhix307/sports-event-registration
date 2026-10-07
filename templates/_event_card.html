@@ -1,0 +1,20 @@
+<article class="event-row sport-theme-{{ event.visual_theme }}">
+  <time class="event-date-block" datetime="{{ event.event_date.isoformat() }}">
+    <span>{{ event.event_date.strftime('%b') }}</span>
+    <strong>{{ event.event_date.strftime('%d') }}</strong>
+    <small>{{ event.event_date.strftime('%Y') }}</small>
+  </time>
+  <div class="event-row-main">
+    <div class="event-row-kicker">
+      <span class="sport-label">{{ event.sport }}</span>
+      <span class="status status-{{ event.status_slug }}">{{ event.status }}</span>
+    </div>
+    <h3><a href="{{ url_for('events.detail', slug=event.slug) }}">{{ event.name }}</a></h3>
+    <p>{{ event.description }}</p>
+  </div>
+  <dl class="event-row-facts">
+    <div><dt>Registration closes</dt><dd>{{ event.registration_deadline.strftime('%d %b %Y') }}</dd></div>
+    <div><dt>Venue</dt><dd>{{ event.venue }}</dd></div>
+  </dl>
+  <a class="event-row-link" href="{{ url_for('events.detail', slug=event.slug) }}">View event <span aria-hidden="true">→</span></a>
+</article>

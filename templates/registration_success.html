@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Registration complete | Sports Registration{% endblock %}
+{% block content %}
+<section class="container success-wrap">
+  <div class="success-card">
+    <div class="success-icon" aria-hidden="true">✓</div>
+    <span class="eyebrow eyebrow-dark">You’re on the list</span>
+    {% if registration.registration_type == 'participant' %}
+      <h1>Registration successful!</h1>
+      <p>You have successfully registered as a participant for <strong>{{ event.name }}</strong>.</p>
+    {% else %}
+      <h1>Volunteer registration successful!</h1>
+      <p>You have successfully registered as a volunteer for <strong>{{ event.name }}</strong>.</p>
+      <p class="success-role">Preferred role: <strong>{{ registration.volunteer_role }}</strong></p>
+    {% endif %}
+    <div class="registration-code-box">
+      <span>Registration ID</span>
+      <strong>{{ registration.registration_code }}</strong>
+    </div>
+    <p class="success-hint">Keep this ID for your reference. Your application is <strong>pending review</strong>; the event organizer can approve or reject it in the admin dashboard.</p>
+    <a class="button button-primary" href="{{ url_for('events.detail', slug=event.slug) }}">Back to event details</a>
+  </div>
+</section>
+{% endblock %}

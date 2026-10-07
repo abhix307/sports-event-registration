@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found | Sports Registration{% endblock %}
+{% block content %}
+<section class="container error-page">
+  <span class="error-code">404</span>
+  <h1>We can’t find that page</h1>
+  <p>The event or page may have moved, or the link may be incorrect.</p>
+  <a class="button button-primary" href="{{ url_for('main.home') }}">Return home</a>
+</section>
+{% endblock %}

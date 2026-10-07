@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} | Sports Registration{% endblock %}
+{% block content %}
+<section class="container admin-page form-admin-page">
+  <a class="back-link" href="{{ url_for('admin.dashboard') }}"><span aria-hidden="true">←</span> Admin dashboard</a>
+  <div class="admin-form-card">
+    <div class="form-card-heading">
+      <span class="eyebrow eyebrow-dark">Event details</span>
+      <h1>{{ heading }}</h1>
+      <p>Share the key information students need before registering.</p>
+    </div>
+    {% if form.errors %}
+      <div class="form-error-summary" role="alert">Please check the highlighted fields and try again.</div>
+    {% endif %}
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="form-grid">
+        <div class="form-field">
+          {{ form.name.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.name(class_='form-control', placeholder='e.g. Football Tournament') }}
+          {% for error in form.name.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.sport.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.sport(class_='form-control', placeholder='e.g. Football') }}
+          {% for error in form.sport.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.background_theme.label(class_='form-label') }}
+          {{ form.background_theme(class_='form-control') }}
+          <small class="field-hint">Auto follows this sport; choose a preset to override the upcoming-event banner.</small>
+          {% for error in form.background_theme.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.event_date.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.event_date(class_='form-control') }}
+          {% for error in form.event_date.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.registration_deadline.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.registration_deadline(class_='form-control') }}
+          <small class="field-hint">Registration closes on the deadline date.</small>
+          {% for error in form.registration_deadline.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field form-field-wide">
+          {{ form.venue.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.venue(class_='form-control', placeholder='e.g. College Ground') }}
+          {% for error in form.venue.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field form-field-wide">
+          {{ form.description.label(class_='form-label') }} <span class="required-mark">*</span>
+          {{ form.description(class_='form-control form-textarea', rows='5', placeholder='Tell students what to expect at this event.') }}
+          {% for error in form.description.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.max_participants.label(class_='form-label') }}
+          {{ form.max_participants(class_='form-control', min='1', placeholder='No limit') }}
+          {% for error in form.max_participants.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="form-field">
+          {{ form.max_volunteers.label(class_='form-label') }}
+          {{ form.max_volunteers(class_='form-control', min='1', placeholder='No limit') }}
+          {% for error in form.max_volunteers.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="button button-primary button-large" type="submit">{{ submit_label }}</button>
+        <a class="button button-quiet" href="{{ url_for('admin.dashboard') }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

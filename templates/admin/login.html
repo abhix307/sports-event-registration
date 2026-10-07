@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Admin sign in | Sports Registration{% endblock %}
+{% block content %}
+<section class="container admin-auth-page">
+  <div class="auth-card">
+    <span class="eyebrow eyebrow-dark">Organizer access</span>
+    <h1>Admin sign in</h1>
+    <p>Sign in to create events and manage student registrations.</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="form-field">
+        {{ form.username.label(class_='form-label') }}
+        {{ form.username(class_='form-control', autocomplete='username', autofocus=true) }}
+        {% for error in form.username.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </div>
+      <div class="form-field">
+        {{ form.password.label(class_='form-label') }}
+        {{ form.password(class_='form-control', autocomplete='current-password') }}
+        {% for error in form.password.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </div>
+      <button class="button button-primary button-full button-large" type="submit">Sign in</button>
+    </form>
+    <p class="auth-footnote">Admin credentials are configured locally in your <code>.env</code> file.</p>
+  </div>
+</section>
+{% endblock %}

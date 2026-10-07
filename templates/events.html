@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Events | Sports Registration{% endblock %}
+{% block content %}
+<section class="container page-heading">
+  <p class="eyebrow eyebrow-dark"><span class="eyebrow-rule"></span> The campus calendar</p>
+  <h1>All sports events</h1>
+  <p>Browse the schedule, check the registration deadline, then open an event to choose participant or volunteer.</p>
+</section>
+<section class="container events-listing">
+  {% if events %}
+    <div class="event-list">
+      {% for event in events %}
+        {% include "_event_card.html" %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-index">—</span>
+      <div><h2>No events have been added yet</h2><p>When an administrator adds an event, it will appear on this page.</p></div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

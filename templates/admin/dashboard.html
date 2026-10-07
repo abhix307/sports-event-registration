@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard | Sports Registration{% endblock %}
+{% block content %}
+<section class="container admin-page">
+  <div class="admin-heading">
+    <div>
+      <p class="eyebrow eyebrow-dark"><span class="eyebrow-rule"></span> Organizer workspace</p>
+      <h1>Event management</h1>
+      <p>Update the schedule and keep registrations organized.</p>
+    </div>
+    <a class="button button-dark add-event-button" href="{{ url_for('admin.create_event') }}"><span aria-hidden="true">＋</span> Add new event</a>
+  </div>
+
+  <section class="stats-grid" aria-label="Event and registration statistics">
+    <article class="stat-card"><span>Total events</span><strong>{{ stats.total_events }}</strong></article>
+    <article class="stat-card"><span>Participants</span><strong>{{ stats.participants }}</strong></article>
+    <article class="stat-card"><span>Volunteers</span><strong>{{ stats.volunteers }}</strong></article>
+    <article class="stat-card stat-pending"><span>Pending review</span><strong>{{ stats.pending }}</strong></article>
+    <article class="stat-card stat-approved"><span>Approved</span><strong>{{ stats.approved }}</strong></article>
+    <article class="stat-card stat-rejected"><span>Rejected</span><strong>{{ stats.rejected }}</strong></article>
+  </section>
+
+  <section class="admin-panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Events</h2>
+        <p>Select an event to review its entries, edit its details or open its public page.</p>
+      </div>
+      <a class="text-link" href="{{ url_for('main.events_list') }}">Public event list <span aria-hidden="true">↗</span></a>
+    </div>
+
+    {% if event_rows %}
+      <div class="table-scroll">
+        <table class="data-table event-admin-table">
+          <thead>
+            <tr><th scope="col">Event</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col">Hero look</th><th scope="col">Participants</th><th scope="col">Volunteers</th><th scope="col">Review counts</th><th scope="col">Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for row in event_rows %}
+              {% set event = row.event %}
+              <tr>
+                <td data-label="Event"><strong>{{ event.name }}</strong><small>{{ event.sport }} · {{ event.venue }}</small></td>
+                <td data-label="Date">{{ event.event_date.strftime('%d %b %Y') }}</td>
+                <td data-label="Status"><span class="status status-{{ event.status_slug }}">{{ event.status }}</span></td>
+                <td data-label="Hero look"><span class="theme-label theme-label-{{ event.visual_theme }}">{{ event.visual_theme|replace('-', ' ')|title }}</span><small>{{ 'Auto by sport' if event.background_theme == 'auto' else 'Admin override' }}</small></td>
+                <td data-label="Participants">{{ row.participants }}{% if event.max_participants is not none %}<span class="count-limit"> / {{ event.max_participants }}</span>{% endif %}</td>
+                <td data-label="Volunteers">{{ row.volunteers }}{% if event.max_volunteers is not none %}<span class="count-limit"> / {{ event.max_volunteers }}</span>{% endif %}</td>
+                <td data-label="Review counts"><div class="review-counts"><span>Pending {{ row.pending }}</span><span>Approved {{ row.approved }}</span><span>Rejected {{ row.rejected }}</span></div></td>
+                <td data-label="Actions">
+                  <div class="table-actions">
+                    <a class="small-action" href="{{ url_for('admin.registrations', event_id=event.id) }}">Registrations</a>
+                    <a class="small-action" href="{{ url_for('admin.edit_event', event_id=event.id) }}">Edit</a>
+                    <a class="small-action" href="{{ url_for('events.detail', slug=event.slug) }}">View</a>
+                    <form method="post" action="{{ url_for('admin.delete_event', event_id=event.id) }}" data-confirm="Delete this event and all its registrations?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="small-action danger-action" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-admin-state">
+        <h3>No events yet</h3>
+        <p>Add your first event. Its public details and registration page will be created automatically.</p>
+        <a class="button button-dark" href="{{ url_for('admin.create_event') }}">＋ Add your first event</a>
+      </div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}
